@@ -4,9 +4,12 @@ const client = new Discord.Client()
 const {
   prefix
 } = require("./config/main.json")
-const token = require("./config/token.txt")
+const fs = require("fs")
+const token = fs.readFileSync("./config/token.txt", 'utf-8')
 const comm = require("./functions/command.js")
 const modules = require("./functions/modules")
+
+console.log(token)
 
 client.on('ready', async () => {
   console.log(`bot aktif!`)
@@ -19,11 +22,15 @@ client.on('ready', async () => {
 })
 
 comm(client, "emoji", msg => {
-  const emote = client.emojis.cache
+  const {guild} = msg
+  
+  const emote = guild.emojis.cache
   const com = msg.content.replace(`${prefix}emoji `, "").match(/"[^"]+"|[^\s]+/g).map(e => e.replace(/"(.+)"/, "$1"))
 
   const type_list = ["all", "string", "emote", "code"]
   const type = ["both", "animated", "static"]
+  
+  
 
   switch (com[0]) {
     case 'list':
@@ -49,7 +56,7 @@ comm(client, "emoji", msg => {
         com.unshift("all")
 
       console.log(com)
-      client.guilds.cache.forEach(guild => msg.channel.send(`All emoji list from **__${guild.name}__**:`))
+      msg.channel.send(`All emoji list from **__${guild.name}__**:`)
 
       emote.forEach(emoji => {
 
@@ -110,7 +117,7 @@ comm(client, "emoji", msg => {
 
       if (search === true) {
 
-        client.guilds.cache.forEach(guild => msg.channel.send(`Find keyword ***${result}*** from **__${guild.name}__**:`))
+        msg.channel.send(`Find keyword ***${result}*** from **__${guild.name}__**:`)
 
         emote.forEach(emoji => {
 
@@ -133,7 +140,7 @@ comm(client, "emoji", msg => {
 
         })
       } else {
-        client.guilds.cache.forEach(guild => msg.channel.send(`Emote from keyword ***${result}*** not Found!`))
+        msg.channel.send(`Emote from keyword ***${result}*** not Found!`)
       }
 
       break;

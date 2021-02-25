@@ -117,6 +117,6 @@ dist
 
 
 # Token Config
-config/token.txt
+config/token
 
 # End of https://www.toptal.com/developers/gitignore/api/node
